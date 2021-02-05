@@ -6,9 +6,9 @@ class Note {
 
     private String headLine;
     private String text;
-    private Date date;
+    private String date;
 
-    public Note(String headLine, String text, Date date) {
+    public Note(String headLine, String text, String date) {
         if (headLine == null) {
             this.headLine = "";
         } else {
@@ -22,18 +22,18 @@ class Note {
         }
 
         if (date == null) {
-            this.date = new Date();
+            this.date = new Date().toString();
         } else {
             this.date = date;
         }
     }
 
     public Note(String headLine, String text) {
-        this(headLine, text, new Date());
+        this(headLine, text, new Date().toString());
     }
 
     public Note(String headLine) {
-        this(headLine, "", new Date());
+        this(headLine, "", new Date().toString());
     }
 
     public String getHeadLine() {
@@ -52,11 +52,11 @@ class Note {
         this.text = text;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void editDate(Date date) {
+    public void editDate(String date) {
         this.date = date;
     }
 }

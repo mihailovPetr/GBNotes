@@ -39,11 +39,11 @@ public class NoteFragment extends Fragment {
         TextInputEditText headlineEditText = view.findViewById(R.id.headlineTextInputEditText);
         TextInputEditText textInputEditText = view.findViewById(R.id.textInputEditText);
 
-        String[] dates =getResources().getStringArray(R.array.date);
+        String[] dates =getResources().getStringArray(R.array.dates);
         String[] headlines = getResources().getStringArray(R.array.headlines);
         headlineEditText.setText(String.format("%s,  %s", headlines[index], dates[index]));
 
-        String[] texts = getResources().getStringArray(R.array.text);
+        String[] texts = getResources().getStringArray(R.array.texts);
         textInputEditText.setText(texts[index]);
         return view;
     }

@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class HeadlinesFragment extends Fragment {
 
@@ -55,21 +58,18 @@ public class HeadlinesFragment extends Fragment {
     }
 
     private void initList(View view) {
-        LinearLayout layoutView = (LinearLayout) view;
-        String[] headlines = getResources().getStringArray(R.array.headlines);
-
-        for (int i = 0; i < headlines.length; i++) {
-            String headline = headlines[i];
-            TextView tv = new TextView(getContext());
-            tv.setText(headline);
-            tv.setTextSize(30);
-            layoutView.addView(tv);
-            final int fi = i;
-            tv.setOnClickListener(v -> {
-                currentPosition = fi;
-                showNote(currentPosition);
-                });
-        }
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        Note[] notes = ((MainActivity) getActivity()).getNotes();
+        Adapter adapter = new Adapter(notes);
+        adapter.setOnItemClickListener(new Adapter.ClickListener() {
+            @Override
+            public void onItemClick(int position, Note note) {
+                showNote(position);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override

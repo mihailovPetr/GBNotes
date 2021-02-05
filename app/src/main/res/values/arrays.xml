@@ -6,9 +6,29 @@
         <item>Заметка 3</item>
         <item>Заметка 4</item>
         <item>Заметка 5</item>
+        <item>Заметка 1</item>
+        <item>Заметка 2</item>
+        <item>Заметка 3</item>
+        <item>Заметка 4</item>
+        <item>Заметка 5</item>
+        <item>Заметка 1</item>
+        <item>Заметка 2</item>
+        <item>Заметка 3</item>
+        <item>Заметка 4</item>
+        <item>Заметка 5</item>
     </string-array>
 
-    <string-array name="text">
+    <string-array name="texts">
+        <item>Текст заметки 1</item>
+        <item>Текст заметки 2</item>
+        <item>Текст заметки 3</item>
+        <item>Текст заметки 4</item>
+        <item>Текст заметки 5</item>
+        <item>Текст заметки 1</item>
+        <item>Текст заметки 2</item>
+        <item>Текст заметки 3</item>
+        <item>Текст заметки 4</item>
+        <item>Текст заметки 5</item>
         <item>Текст заметки 1</item>
         <item>Текст заметки 2</item>
         <item>Текст заметки 3</item>
@@ -16,7 +36,17 @@
         <item>Текст заметки 5</item>
     </string-array>
 
-    <string-array name="date">
+    <string-array name="dates">
+        <item>01.01.2021</item>
+        <item>05.01.2021</item>
+        <item>07.01.2021</item>
+        <item>09.01.2021</item>
+        <item>20.01.2021</item>
+        <item>01.01.2021</item>
+        <item>05.01.2021</item>
+        <item>07.01.2021</item>
+        <item>09.01.2021</item>
+        <item>20.01.2021</item>
         <item>01.01.2021</item>
         <item>05.01.2021</item>
         <item>07.01.2021</item>
