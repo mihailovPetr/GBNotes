@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         initNotes();
         setContentView(R.layout.activity_main);
         initViews();
+
     }
 
     private void initNotes() {
