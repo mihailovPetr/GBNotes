@@ -59,14 +59,9 @@ public class HeadlinesFragment extends Fragment {
 
     private void initList(View view) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-        Note[] notes = ((MainActivity) getActivity()).getNotes();
+        NotesSource notes = ((MainActivity) getActivity()).getNotes();
         Adapter adapter = new Adapter(notes);
-        adapter.setOnItemClickListener(new Adapter.ClickListener() {
-            @Override
-            public void onItemClick(int position, Note note) {
-                showNote(position);
-            }
-        });
+        adapter.setOnItemClickListener((position, note) -> showNote(position));
         recyclerView.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);

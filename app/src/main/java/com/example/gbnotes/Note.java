@@ -5,20 +5,20 @@ import java.util.Date;
 class Note {
 
     private String headLine;
-    private String text;
+    private String description;
     private String date;
 
-    public Note(String headLine, String text, String date) {
+    public Note(String headLine, String description, String date) {
         if (headLine == null) {
             this.headLine = "";
         } else {
             this.headLine = headLine;
         }
 
-        if (text == null) {
-            this.text = "";
+        if (description == null) {
+            this.description = "";
         } else {
-            this.text = text;
+            this.description = description;
         }
 
         if (date == null) {
@@ -28,8 +28,8 @@ class Note {
         }
     }
 
-    public Note(String headLine, String text) {
-        this(headLine, text, new Date().toString());
+    public Note(String headLine, String description) {
+        this(headLine, description, new Date().toString());
     }
 
     public Note(String headLine) {
@@ -44,12 +44,12 @@ class Note {
         this.headLine = headLine;
     }
 
-    public String getText() {
-        return text;
+    public String getDescription() {
+        return description;
     }
 
-    public void editText(String text) {
-        this.text = text;
+    public void editText(String description) {
+        this.description = description;
     }
 
     public String getDate() {

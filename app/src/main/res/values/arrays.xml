@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="headlines">
+    <string-array name="titles">
         <item>Заметка 1</item>
         <item>Заметка 2</item>
         <item>Заметка 3</item>
@@ -18,7 +18,7 @@
         <item>Заметка 5</item>
     </string-array>
 
-    <string-array name="texts">
+    <string-array name="descriptions">
         <item>Текст заметки 1</item>
         <item>Текст заметки 2</item>
         <item>Текст заметки 3</item>

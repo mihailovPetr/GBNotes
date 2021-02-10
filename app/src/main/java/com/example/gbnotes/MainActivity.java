@@ -3,20 +3,15 @@ package com.example.gbnotes;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 public class MainActivity extends AppCompatActivity {
 
-    private Note[] notes;
+    private NotesSource notes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +23,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initNotes() {
-        String[] headlines = getResources().getStringArray(R.array.headlines);
-        String[] texts = getResources().getStringArray(R.array.texts);
-        String[] dates = getResources().getStringArray(R.array.dates);
-
-        notes = new Note[headlines.length];
-
-        for (int i = 0; i < notes.length; i++) {
-            notes[i] = new Note(headlines[i], texts[i], dates[i]);
-        }
+        notes = new Notes(getResources());
     }
 
-    public Note[] getNotes() {
+    public NotesSource getNotes() {
         return notes;
     }
 
