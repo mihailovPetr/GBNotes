@@ -35,4 +35,19 @@ class Notes implements NotesSource {
     public int size() {
         return notes.size();
     }
+
+    @Override
+    public void deleteNote(int position) {
+        notes.remove(position);
+    }
+
+    @Override
+    public void updateNote(int position, Note note) {
+        notes.set(position, note);
+    }
+
+    @Override
+    public void addNote(Note note) {
+        notes.add(note);
+    }
 }
