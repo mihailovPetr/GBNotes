@@ -3,21 +3,28 @@ package com.example.gbnotes;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class HeadlinesFragment extends Fragment {
 
     public static final String CURRENT_NOTE = "CurrentNote";
+    private Adapter adapter;
+    private RecyclerView recyclerView;
+    private NotesSource notes;
     private int currentPosition = 0;
     private boolean isLandscape;
 
@@ -36,6 +43,7 @@ public class HeadlinesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initList(view);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -54,22 +62,55 @@ public class HeadlinesFragment extends Fragment {
         }
     }
 
-    private void initList(View view) {
-        LinearLayout layoutView = (LinearLayout) view;
-        String[] headlines = getResources().getStringArray(R.array.headlines);
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = requireActivity().getMenuInflater();
+        inflater.inflate(R.menu.card_menu, menu);
+    }
 
-        for (int i = 0; i < headlines.length; i++) {
-            String headline = headlines[i];
-            TextView tv = new TextView(getContext());
-            tv.setText(headline);
-            tv.setTextSize(30);
-            layoutView.addView(tv);
-            final int fi = i;
-            tv.setOnClickListener(v -> {
-                currentPosition = fi;
-                showNote(currentPosition);
-                });
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_add:
+                notes.addNote(new Note("Тестовая"));
+                adapter.notifyItemInserted(notes.size() - 1);
+                recyclerView.smoothScrollToPosition(notes.size() - 1);
+                return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int position = adapter.getMenuPosition();
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                showAddChaneNoteFragment(notes.getNote(position));
+                return true;
+            case R.id.action_delete:
+                notes.deleteNote(position);
+                adapter.notifyItemRemoved(position);
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
+    private void initList(View view) {
+        recyclerView = view.findViewById(R.id.recycler);
+        notes = ((MainActivity) requireActivity()).getNotes();
+        adapter = new Adapter(notes, this);
+        adapter.setOnItemClickListener((position, note) -> showNote(position));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -78,8 +119,8 @@ public class HeadlinesFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void showNote(int index){
-        if (isLandscape){
+    private void showNote(int index) {
+        if (isLandscape) {
             showLandNote(index);
         } else {
             showPortNote(index);
@@ -87,11 +128,11 @@ public class HeadlinesFragment extends Fragment {
     }
 
     private void showLandNote(int index) {
-        NoteFragment note = NoteFragment.newInstance(index);
+        NoteFragment noteFragment = NoteFragment.newInstance(index);
 
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.headlines_fragment_land, note);
+        fragmentTransaction.replace(R.id.note_FrameLayout, noteFragment);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
     }
@@ -102,6 +143,17 @@ public class HeadlinesFragment extends Fragment {
         startActivity(intent);
     }
 
+    private void showAddChaneNoteFragment(Note note) {
+        AddChangeNoteFragment addChangeNoteFragment = AddChangeNoteFragment.newInstance(note);
 
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.headlines_fragment, addChangeNoteFragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commit();
+    }
 
+    public NotesSource getNotes(){
+       return notes;
+    }
 }
