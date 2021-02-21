@@ -42,7 +42,7 @@ public class NoteFragment extends Fragment {
         NotesSource notes = new Notes(getResources()); //((MainActivity) getActivity()).getNotes();
         Note note = notes.getNote(index);
 
-        headlineEditText.setText(String.format("%s,  %s",note.getHeadLine(), note.getDate()));
+        headlineEditText.setText(String.format("%s,  %s",note.getTitle(), note.getDate()));
         textInputEditText.setText(note.getDescription());
         return view;
     }

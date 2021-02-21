@@ -5,17 +5,17 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
-class Note implements Parcelable {
+public class Note implements Parcelable {
 
-    private String headLine;
+    private String title;
     private String description;
     private String date;
 
-    public Note(String headLine, String description, String date) {
-        if (headLine == null) {
-            this.headLine = "";
+    public Note(String title, String description, String date) {
+        if (title == null) {
+            this.title = "";
         } else {
-            this.headLine = headLine;
+            this.title = title;
         }
 
         if (description == null) {
@@ -31,27 +31,27 @@ class Note implements Parcelable {
         }
     }
 
-    public Note(String headLine, String description) {
-        this(headLine, description, new Date().toString());
+    public Note(String title, String description) {
+        this(title, description, new Date().toString());
     }
 
-    public Note(String headLine) {
-        this(headLine, "", new Date().toString());
+    public Note(String title) {
+        this(title, "", new Date().toString());
     }
 
     protected Note(Parcel in) {
-        headLine = in.readString();
+        title = in.readString();
         description = in.readString();
         date = in.readString();
     }
 
 
-    public String getHeadLine() {
-        return headLine;
+    public String getTitle() {
+        return title;
     }
 
-    public void editHeadLine(String headLine) {
-        this.headLine = headLine;
+    public void editTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -77,7 +77,7 @@ class Note implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(headLine);
+        dest.writeString(title);
         dest.writeString(description);
         dest.writeString(date);
     }

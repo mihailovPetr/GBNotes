@@ -1,5 +1,6 @@
 package com.example.gbnotes;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gbnotes.observe.Observer;
+import com.example.gbnotes.observe.Publisher;
+
 public class HeadlinesFragment extends Fragment {
 
     public static final String CURRENT_NOTE = "CurrentNote";
@@ -27,6 +31,7 @@ public class HeadlinesFragment extends Fragment {
     private NotesSource notes;
     private int currentPosition = 0;
     private boolean isLandscape;
+    private Publisher publisher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,19 @@ public class HeadlinesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_headlines, container, false);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        MainActivity activity = (MainActivity)context;
+        publisher = activity.getPublisher();
+    }
+
+    @Override
+    public void onDetach() {
+        publisher = null;
+        super.onDetach();
     }
 
     @Override
@@ -92,6 +110,13 @@ public class HeadlinesFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_edit:
                 showAddChaneNoteFragment(notes.getNote(position));
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateNoteData(Note note) {
+                        notes.updateNote(position, note);
+                        adapter.notifyItemChanged(position);
+                    }
+                });
                 return true;
             case R.id.action_delete:
                 notes.deleteNote(position);
@@ -149,7 +174,7 @@ public class HeadlinesFragment extends Fragment {
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.headlines_fragment, addChangeNoteFragment);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 

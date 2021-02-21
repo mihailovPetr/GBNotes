@@ -1,5 +1,6 @@
 package com.example.gbnotes;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.gbnotes.observe.Publisher;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class AddChangeNoteFragment extends Fragment {
@@ -21,6 +23,8 @@ public class AddChangeNoteFragment extends Fragment {
     private Note note;
     private TextInputEditText titleEditText;
     private TextInputEditText descriptionEditText;
+    MainActivity mainActivity;
+    Publisher publisher;
 
     public static AddChangeNoteFragment newInstance(Note note) {
         AddChangeNoteFragment fragment = new AddChangeNoteFragment();
@@ -31,8 +35,22 @@ public class AddChangeNoteFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        MainActivity activity = (MainActivity) context;
+        publisher = activity.getPublisher();
+    }
+
+    @Override
+    public void onDetach() {
+        publisher = null;
+        super.onDetach();
+    }
+
+        @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        note = getArguments().getParcelable(NOTE);
     }
 
     @Override
@@ -61,18 +79,20 @@ public class AddChangeNoteFragment extends Fragment {
         descriptionEditText = view.findViewById(R.id.addChangeDescriptionEditText);
 
         if (note != null) {
-            titleEditText.setText(note.getHeadLine());
+            titleEditText.setText(note.getTitle());
             descriptionEditText.setText(note.getDescription());
         }
 
         Button saveButton = view.findViewById(R.id.button_save);
-        Fragment fragment = this;
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                note = new Note(titleEditText.getText().toString(), descriptionEditText.getText().toString());
-                ((MainActivity) getActivity()).getNotes().updateNote(0, note);
+                note.editTitle(titleEditText.getText().toString());
+                publisher.notifySingle(note);
+                //note = new Note(titleEditText.getText().toString(), descriptionEditText.getText().toString());
+
+                //((MainActivity) getActivity()).getNotes().updateNote(0, note);
                 getFragmentManager().beginTransaction().remove(AddChangeNoteFragment.this).commit();
             }
         });
