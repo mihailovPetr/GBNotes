@@ -11,13 +11,13 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class NoteFragment extends Fragment {
 
-    static final String ARG_INDEX = "index";
-    private int index;
+    static final String ARG_NOTE = "note";
+    private Note note;
 
-    public static NoteFragment newInstance(int index) {
+    public static NoteFragment newInstance(Note note) {
         NoteFragment notes = new NoteFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_INDEX, index);
+        args.putParcelable(ARG_NOTE, note);
         notes.setArguments(args);
         return notes;
     }
@@ -26,7 +26,7 @@ public class NoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            index = getArguments().getInt(ARG_INDEX);
+            note = getArguments().getParcelable(ARG_NOTE);
         }
 
     }
@@ -38,9 +38,6 @@ public class NoteFragment extends Fragment {
 
         TextInputEditText headlineEditText = view.findViewById(R.id.headlineTextInputEditText);
         TextInputEditText textInputEditText = view.findViewById(R.id.textInputEditText);
-
-        NotesSource notes = new Notes(getResources()); //((MainActivity) getActivity()).getNotes();
-        Note note = notes.getNote(index);
 
         headlineEditText.setText(String.format("%s,  %s",note.getTitle(), note.getDate()));
         textInputEditText.setText(note.getDescription());

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initNotes() {
-        notes = new Notes(getResources());
+        notes = new NotesFireBase();
     }
 
     public NotesSource getNotes() {

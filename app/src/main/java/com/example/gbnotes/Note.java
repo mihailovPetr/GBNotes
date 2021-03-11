@@ -6,12 +6,12 @@ import android.os.Parcelable;
 import java.util.Date;
 
 public class Note implements Parcelable {
-
+    private String id;
     private String title;
     private String description;
-    private String date;
+    private Date date;
 
-    public Note(String title, String description, String date) {
+    public Note(String title, String description, Date date) {
         if (title == null) {
             this.title = "";
         } else {
@@ -25,26 +25,33 @@ public class Note implements Parcelable {
         }
 
         if (date == null) {
-            this.date = new Date().toString();
+            this.date = new Date();
         } else {
             this.date = date;
         }
     }
 
     public Note(String title, String description) {
-        this(title, description, new Date().toString());
+        this(title, description, new Date());
     }
 
     public Note(String title) {
-        this(title, "", new Date().toString());
+        this(title, "", new Date());
     }
 
     protected Note(Parcel in) {
         title = in.readString();
         description = in.readString();
-        date = in.readString();
+        date = (Date) in.readSerializable();
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -62,11 +69,11 @@ public class Note implements Parcelable {
         this.description = description;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void editDate(String date) {
+    public void editDate(Date date) {
         this.date = date;
     }
 
@@ -79,7 +86,7 @@ public class Note implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeString(date);
+        dest.writeSerializable(date);
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {

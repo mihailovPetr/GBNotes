@@ -18,9 +18,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private ClickListener clickListener;
     private int menuPosition;
 
-    public Adapter(NotesSource dataSource, Fragment fragment) {
-        this.dataSource = dataSource;
+    public Adapter(Fragment fragment) {
         this.fragment = fragment;
+    }
+
+    public void setDataSource(NotesSource dataSource){
+        this.dataSource = dataSource;
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(ClickListener itemClickListener) {
@@ -87,7 +91,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
         public void onBind(Note note) {
             title.setText(note.getTitle());
-            date.setText(note.getDate());
+            date.setText(note.getDate().toString());
         }
     }
 }

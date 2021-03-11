@@ -16,5 +16,9 @@
     <string name="delete">Удалить</string>
     <string name="edit">Изменить</string>
     <string name="save">Сохранить</string>
+    <string name="deleteNote">Удалить заметку</string>
+    <string name="delete_Note_msg">Вы действительно хотите удалить заметку?</string>
+    <string name="positive_button">Да</string>
+    <string name="negative_button">Нет</string>
 
 </resources>

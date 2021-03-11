@@ -3,15 +3,14 @@ package com.example.gbnotes;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.gbnotes.observe.Publisher;
 import com.google.android.material.textfield.TextInputEditText;
@@ -47,10 +46,14 @@ public class AddChangeNoteFragment extends Fragment {
         super.onDetach();
     }
 
-        @Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        note = getArguments().getParcelable(NOTE);
+        if (getArguments() != null) {
+            note = getArguments().getParcelable(NOTE);
+        } else {
+            note = new Note("");
+        }
     }
 
     @Override
@@ -89,13 +92,14 @@ public class AddChangeNoteFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 note.editTitle(titleEditText.getText().toString());
+                note.editText(descriptionEditText.getText().toString());
                 publisher.notifySingle(note);
                 //note = new Note(titleEditText.getText().toString(), descriptionEditText.getText().toString());
 
-                //((MainActivity) getActivity()).getNotes().updateNote(0, note);
                 getFragmentManager().beginTransaction().remove(AddChangeNoteFragment.this).commit();
             }
         });
+
     }
 
 

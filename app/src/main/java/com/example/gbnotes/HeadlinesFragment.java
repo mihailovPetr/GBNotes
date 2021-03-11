@@ -11,9 +11,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -47,7 +49,7 @@ public class HeadlinesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity)context;
+        MainActivity activity = (MainActivity) context;
         publisher = activity.getPublisher();
     }
 
@@ -94,11 +96,16 @@ public class HeadlinesFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_add:
-                notes.addNote(new Note("Тестовая"));
-                adapter.notifyItemInserted(notes.size() - 1);
-                recyclerView.smoothScrollToPosition(notes.size() - 1);
+                showAddChaneNoteFragment(new Note(""));
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateNoteData(Note note) {
+                        notes.addNote(note);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -119,18 +126,38 @@ public class HeadlinesFragment extends Fragment {
                 });
                 return true;
             case R.id.action_delete:
-                notes.deleteNote(position);
-                adapter.notifyItemRemoved(position);
+                showDeleteNoteDialog(position);
                 return true;
         }
         return super.onContextItemSelected(item);
     }
 
+    private void showDeleteNoteDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.deleteNote)
+                .setMessage(R.string.delete_Note_msg)
+                .setPositiveButton(R.string.positive_button,
+                        (dialog, id) -> {
+                            deleteNote(position);
+                            Toast.makeText(getContext(), "Заметка удалена", Toast.LENGTH_SHORT).show();
+                        })
+                .setNegativeButton(R.string.negative_button, (dialog, id) -> {
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void deleteNote(int position) {
+        notes.deleteNote(position);
+        adapter.notifyItemRemoved(position);
+    }
 
     private void initList(View view) {
         recyclerView = view.findViewById(R.id.recycler);
+        adapter = new Adapter(this);
         notes = ((MainActivity) requireActivity()).getNotes();
-        adapter = new Adapter(notes, this);
+        notes.init(notes -> adapter.notifyDataSetChanged());
+        adapter.setDataSource(notes);
         adapter.setOnItemClickListener((position, note) -> showNote(position));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
@@ -153,7 +180,7 @@ public class HeadlinesFragment extends Fragment {
     }
 
     private void showLandNote(int index) {
-        NoteFragment noteFragment = NoteFragment.newInstance(index);
+        NoteFragment noteFragment = NoteFragment.newInstance(notes.getNote(index));
 
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -164,7 +191,7 @@ public class HeadlinesFragment extends Fragment {
 
     private void showPortNote(int index) {
         Intent intent = new Intent(getActivity(), NoteActivity.class);
-        intent.putExtra(NoteFragment.ARG_INDEX, index);
+        intent.putExtra(NoteFragment.ARG_NOTE, notes.getNote(index));
         startActivity(intent);
     }
 
@@ -178,7 +205,7 @@ public class HeadlinesFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-    public NotesSource getNotes(){
-       return notes;
+    public NotesSource getNotes() {
+        return notes;
     }
 }
